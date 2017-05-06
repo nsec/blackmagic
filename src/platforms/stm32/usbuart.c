@@ -53,7 +53,7 @@ void usbuart_init(void)
 	/* Setup UART parameters. */
 	usart_set_baudrate(USBUSART, 38400);
 	usart_set_databits(USBUSART, 8);
-	usart_set_stopbits(USBUSART, USART_STOPBITS_1);
+	usart_set_stopbits(USBUSART, USART_CR2_STOP_1_0BIT);
 	usart_set_mode(USBUSART, USART_MODE_TX_RX);
 	usart_set_parity(USBUSART, USART_PARITY_NONE);
 	usart_set_flow_control(USBUSART, USART_FLOWCONTROL_NONE);
@@ -72,7 +72,7 @@ void usbuart_init(void)
 	timer_set_mode(USBUSART_TIM, TIM_CR1_CKD_CK_INT,
 			TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 	timer_set_prescaler(USBUSART_TIM,
-			rcc_ppre2_frequency / USBUART_TIMER_FREQ_HZ * 2 - 1);
+			rcc_apb1_frequency / USBUART_TIMER_FREQ_HZ * 2 - 1);
 	timer_set_period(USBUSART_TIM,
 			USBUART_TIMER_FREQ_HZ / USBUART_RUN_FREQ_HZ - 1);
 
@@ -140,13 +140,13 @@ void usbuart_set_line_coding(struct usb_cdc_line_coding *coding)
 
 	switch(coding->bCharFormat) {
 	case 0:
-		usart_set_stopbits(USBUSART, USART_STOPBITS_1);
+		usart_set_stopbits(USBUSART, USART_CR2_STOP_1_0BIT);
 		break;
 	case 1:
-		usart_set_stopbits(USBUSART, USART_STOPBITS_1_5);
+		usart_set_stopbits(USBUSART, USART_CR2_STOP_1_5BIT);
 		break;
 	case 2:
-		usart_set_stopbits(USBUSART, USART_STOPBITS_2);
+		usart_set_stopbits(USBUSART, USART_CR2_STOP_2_0BIT);
 		break;
 	}
 
@@ -215,9 +215,9 @@ void usbuart_usb_in_cb(usbd_device *dev, uint8_t ep)
  */
 void USBUSART_ISR(void)
 {
-	uint32_t err = USART_SR(USBUSART);
+	uint32_t err = USART_ISR(USBUSART);
 	char c = usart_recv(USBUSART);
-	if (err & (USART_SR_ORE | USART_SR_FE))
+	if (err & (USART_ISR_ORE | USART_ISR_FE))
 		return;
 
 	/* Turn on LED */
