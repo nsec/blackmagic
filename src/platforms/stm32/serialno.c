@@ -21,11 +21,7 @@
 
 char *serialno_read(char *s)
 {
-#if defined(STM32F4)
-	volatile uint32_t *unique_id_p = (volatile uint32_t *)0x1FFF7A10;
-#else
-	volatile uint32_t *unique_id_p = (volatile uint32_t *)0x1FFFF7E8;
-#endif
+	volatile uint32_t *unique_id_p = (volatile uint32_t *)DESIG_UNIQUE_ID_BASE;
 	uint32_t unique_id = *unique_id_p +
 			*(unique_id_p + 1) +
 			*(unique_id_p + 2);

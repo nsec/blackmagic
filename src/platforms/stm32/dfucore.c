@@ -274,20 +274,7 @@ void dfu_main(void)
 
 static char *get_dev_unique_id(char *s)
 {
-#if defined(STM32F4) || defined(STM32F2)
-#	define UNIQUE_SERIAL_R 0x1FFF7A10
-#	define FLASH_SIZE_R    0x1fff7A22
-#elif defined(STM32F3)
-#	define UNIQUE_SERIAL_R 0x1FFFF7AC
-#	define FLASH_SIZE_R    0x1fff77cc
-#elif defined(STM32L1)
-#	define UNIQUE_SERIAL_R 0x1ff80050
-#	define FLASH_SIZE_R    0x1FF8004C
-#else
-#	define UNIQUE_SERIAL_R 0x1FFFF7E8;
-#	define FLASH_SIZE_R    0x1ffff7e0
-#endif
-	volatile uint32_t *unique_id_p = (volatile uint32_t *)UNIQUE_SERIAL_R;
+	volatile uint32_t *unique_id_p = (volatile uint32_t *)DESIG_UNIQUE_ID_BASE;
 	uint32_t unique_id = *unique_id_p +
 			*(unique_id_p + 1) +
 			*(unique_id_p + 2);
@@ -295,7 +282,7 @@ static char *get_dev_unique_id(char *s)
 
 	/* Calculated the upper flash limit from the exported data
 	   in theparameter block*/
-	max_address = (*(uint32_t *) FLASH_SIZE_R) <<10;
+	max_address = (*(uint32_t *) DESIG_FLASH_SIZE_BASE) <<10;
 	/* Fetch serial number from chip's unique ID */
 	for(i = 0; i < 8; i++) {
 		s[7-i] = ((unique_id >> (4*i)) & 0xF) + '0';
