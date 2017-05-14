@@ -3,13 +3,13 @@ CC = $(CROSS_COMPILE)gcc
 OBJCOPY = $(CROSS_COMPILE)objcopy
 
 CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
-	-DSTM32F0 -DBLACKMAGIC -I../libopencm3/include \
+	-DSTM32F0 -DBLACKMAGIC -I../../libopencm3/include \
 	-Iplatforms/stm32
 
 LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 -Wl,--defsym,_stack=0x20004000 \
 	-Wl,-T,platforms/nsec17/nsec17.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m0 -Wl,-gc-sections \
-	-L../libopencm3/lib
+	-L../../libopencm3/lib
 LDFLAGS = $(LDFLAGS_BOOT) -Wl,-Ttext=0x8000000
 
 ifeq ($(ENABLE_DEBUG), 1)
