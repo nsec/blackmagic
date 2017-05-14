@@ -1,6 +1,7 @@
 CROSS_COMPILE ?= arm-none-eabi-
 CC = $(CROSS_COMPILE)gcc
 OBJCOPY = $(CROSS_COMPILE)objcopy
+AR = $(CROSS_COMPILE)ar
 
 CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
 	-DSTM32F0 -DBLACKMAGIC -I../../libopencm3/include \
@@ -27,7 +28,10 @@ SRC += 	cdcacm.c	\
 	timing.c	\
 	timing_stm32.c	\
 
-all:	blackmagic.bin
+all:	blackmagic.bin libblackmagic.a
+
+libblackmagic.a: $(OBJ)
+	$(Q)$(AR) rcs "$@" $(filter-out main.o, $(OBJ))
 
 blackmagic_dfu: usbdfu.o dfucore.o dfu_f0.o
 	@echo "  LD      $@"
