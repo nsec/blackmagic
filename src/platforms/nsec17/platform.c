@@ -62,57 +62,10 @@ void platform_init(void)
 	rcc_periph_clock_enable(RCC_CRC);
 	rcc_set_usbclk_source(RCC_HSI48);
 
-	/* Setup GPIO ports */
-	//gpio_clear(USB_PU_PORT, USB_PU_PIN);
-	//gpio_mode_setup(USB_PU_PORT, GPIO_MODE_INPUT, GPIO_PUPD_NONE,
-	//		USB_PU_PIN);
-
-	//gpio_set_mode(JTAG_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	//		GPIO_CNF_OUTPUT_PUSHPULL,
-	//		TMS_DIR_PIN | TMS_PIN | TCK_PIN | TDI_PIN);
 	gpio_mode_setup(JTAG_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP,
 			TMS_DIR_PIN | TMS_PIN | TCK_PIN);
 	gpio_set_output_options(JTAG_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ,
 			TMS_DIR_PIN | TMS_PIN | TCK_PIN);
-	/* This needs some fixing... */
-	/* Toggle required to sort out line drivers... */
-	//gpio_port_write(GPIOA, 0x8102);
-	//gpio_port_write(GPIOB, 0x2000);
-
-	//gpio_port_write(GPIOA, 0x8182);
-	//gpio_port_write(GPIOB, 0x2002);
-
-	//gpio_set_mode(LED_PORT, GPIO_MODE_OUTPUT_2_MHZ,
-	//		GPIO_CNF_OUTPUT_PUSHPULL,
-	//		LED_UART | LED_IDLE_RUN | LED_ERROR);
-
-	/* FIXME: This pin in intended to be input, but the TXS0108 fails
-	 * to release the device from reset if this floats. */
-	//gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ,
-	//		GPIO_CNF_OUTPUT_PUSHPULL, GPIO7);
-	/* Enable SRST output. Original uses a NPN to pull down, so setting the
-	 * output HIGH asserts. Mini is directly connected so use open drain output
-	 * and set LOW to assert.
-	 */
-	//platform_srst_set_val(false);
-	//gpio_set_mode(SRST_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	//		(((platform_hwversion() == 0) ||
-	//		  (platform_hwversion() >= 3))
-	//		 ? GPIO_CNF_OUTPUT_PUSHPULL
-	//		 : GPIO_CNF_OUTPUT_OPENDRAIN),
-	//		SRST_PIN);
-
-	/* Enable internal pull-up on PWR_BR so that we don't drive
-	   TPWR locally or inadvertently supply power to the target. */
-	//if (platform_hwversion () == 1) {
-	//	gpio_set(PWR_BR_PORT, PWR_BR_PIN);
-	//	gpio_set_mode(PWR_BR_PORT, GPIO_MODE_INPUT,
-	//	              GPIO_CNF_INPUT_PULL_UPDOWN, PWR_BR_PIN);
-	//} else if (platform_hwversion() > 1) {
-	//	gpio_set(PWR_BR_PORT, PWR_BR_PIN);
-	//	gpio_set_mode(PWR_BR_PORT, GPIO_MODE_OUTPUT_50_MHZ,
-	//	              GPIO_CNF_OUTPUT_OPENDRAIN, PWR_BR_PIN);
-	//}
 
 	platform_timing_init();
 	cdcacm_init();
@@ -159,17 +112,6 @@ const char *platform_target_voltage(void)
 
 void platform_request_boot(void)
 {
-	/* Disconnect USB cable */
-	//gpio_set_mode(USB_PU_PORT, GPIO_MODE_INPUT, 0, USB_PU_PIN);
-	gpio_mode_setup(GPIOA, GPIO_MODE_INPUT, GPIO_PUPD_NONE, GPIO11);
-
-	/* Drive boot request pin */
-	// gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_2_MHZ,
-	// 		GPIO_CNF_OUTPUT_PUSHPULL, GPIO12);
-	// gpio_clear(GPIOB, GPIO12);
-	// gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP, GPI012);
-	// gpio_set_output_options(GPIOA, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, GPIO12);
-	// gpio_clear(GPIOA, GPIO12);
 }
 
 #ifdef ENABLE_DEBUG
