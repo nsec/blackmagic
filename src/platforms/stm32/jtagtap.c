@@ -53,6 +53,7 @@ void jtagtap_reset(void)
 
 inline uint8_t jtagtap_next(uint8_t dTMS, uint8_t dTDI)
 {
+#if defined(TDI_PIN) && defined(TDO_PIN)
 	uint16_t ret;
 
 	gpio_set_val(TMS_PORT, TMS_PIN, dTMS);
@@ -64,5 +65,10 @@ inline uint8_t jtagtap_next(uint8_t dTMS, uint8_t dTDI)
 	//DEBUG("jtagtap_next(TMS = %d, TDI = %d) = %d\n", dTMS, dTDI, ret);
 
 	return ret != 0;
+#else
+	(void) dTMS;
+	(void) dTDI;
+	return 0;
+#endif
 }
 

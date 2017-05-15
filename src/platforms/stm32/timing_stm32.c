@@ -49,9 +49,6 @@ void platform_delay(uint32_t ms)
 
 void sys_tick_handler(void)
 {
-	if(running_status)
-		gpio_toggle(LED_PORT, LED_IDLE_RUN);
-
 	time_ms += 100;
 
 	SET_ERROR_STATE(morse_update());

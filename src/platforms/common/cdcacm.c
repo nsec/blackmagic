@@ -173,6 +173,7 @@ static const struct usb_iface_assoc_descriptor gdb_assoc = {
 	.iFunction = 0,
 };
 
+#if defined(PLATFORM_HAS_USBUART)
 /* Serial ACM interface */
 static const struct usb_endpoint_descriptor uart_comm_endp[] = {{
 	.bLength = USB_DT_ENDPOINT_SIZE,
@@ -276,6 +277,8 @@ static const struct usb_iface_assoc_descriptor uart_assoc = {
 	.iFunction = 0,
 };
 
+#endif // defined(PLATFORM_HAS_USBUART)
+
 const struct usb_dfu_descriptor dfu_function = {
 	.bLength = sizeof(struct usb_dfu_descriptor),
 	.bDescriptorType = DFU_FUNCTIONAL,
@@ -354,6 +357,7 @@ static const struct usb_interface ifaces[] = {{
 }, {
 	.num_altsetting = 1,
 	.altsetting = gdb_data_iface,
+#if defined(PLATFORM_HAS_USBUART)
 }, {
 	.num_altsetting = 1,
 	.iface_assoc = &uart_assoc,
@@ -361,6 +365,7 @@ static const struct usb_interface ifaces[] = {{
 }, {
 	.num_altsetting = 1,
 	.altsetting = uart_data_iface,
+#endif
 }, {
 	.num_altsetting = 1,
 	.iface_assoc = &dfu_assoc,
@@ -377,11 +382,7 @@ static const struct usb_config_descriptor config = {
 	.bLength = USB_DT_CONFIGURATION_SIZE,
 	.bDescriptorType = USB_DT_CONFIGURATION,
 	.wTotalLength = 0,
-#if defined(PLATFORM_HAS_TRACESWO)
-	.bNumInterfaces = 6,
-#else
-	.bNumInterfaces = 5,
-#endif
+	.bNumInterfaces = sizeof(ifaces) / sizeof(ifaces[0]),
 	.bConfigurationValue = 1,
 	.iConfiguration = 0,
 	.bmAttributes = 0x80,
@@ -444,7 +445,9 @@ static int cdcacm_control_request(usbd_device *dev,
 
 		switch(req->wIndex) {
 		case 2:
+#if defined(PLATFORM_HAS_USBUART)
 			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf);
+#endif
 		case 0:
 			return 1; /* Ignore on GDB Port */
 		default:
@@ -513,12 +516,14 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 	              CDCACM_PACKET_SIZE, NULL);
 	usbd_ep_setup(dev, 0x82, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
 
+#if defined(PLATFORM_HAS_USBUART)
 	/* Serial interface */
 	usbd_ep_setup(dev, 0x03, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_out_cb);
 	usbd_ep_setup(dev, 0x83, USB_ENDPOINT_ATTR_BULK,
 	              CDCACM_PACKET_SIZE, usbuart_usb_in_cb);
 	usbd_ep_setup(dev, 0x84, USB_ENDPOINT_ATTR_INTERRUPT, 16, NULL);
+#endif
 
 #if defined(PLATFORM_HAS_TRACESWO)
 	/* Trace interface */

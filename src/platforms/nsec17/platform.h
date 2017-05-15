@@ -41,29 +41,19 @@
 #define DFU_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Ka,120*001Kg"
 #define UPD_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Kg"
 
-// stm32f072cbt6
-
-/* Important pin mappings for STM32 implementation:
+/* Important pin mappings for NorthSec badge implementation:
+ * uC is a STM32f072cbt6.
  *
- * LED0 = 	PB2	(Yellow LED : Running)
- * LED1 = 	PB10	(Yellow LED : Idle)
- * LED2 = 	PB11	(Red LED    : Error)
+ * nFR51 (internal) SWDIO/TMS: PB0
+ * nFR51 (internal) SWCLK/TCK: PB1
+ * nFR51 (internal) SWDIR/DIR: PB2 (?)
  *
- * TPWR = 	RB0 (input) -- analogue on mini design ADC1, ch8
- * nTRST = 	PB1 (output) [blackmagic]
- * PWR_BR = 	PB1 (output) [blackmagic_mini] -- supply power to the target, active low
- * TMS_DIR =    PA1 (output) [blackmagic_mini v2.1] -- choose direction of the TCK pin, input low, output high
- * SRST_OUT = 	PA2 (output)
- * TDI = 	PA3 (output)
- * TMS = 	PA4 (input/output for SWDIO)
- * TCK = 	PA5 (output SWCLK)
- * TDO = 	PA6 (input)
- * nSRST = 	PA7 (input)
+ * External SWDIO/TMS: PB12
+ * External SWCLK/TCK: PB15
+ * External nRST: PB2
  *
- * USB cable pull-up: PA8
- * USB VBUS detect:  PB13 -- New on mini design.
- *                           Enable pull up for compatibility.
- * Force DFU mode button: PB12
+ * USB cable -: PA11
+ * USB cable +: PA12
  */
 
 /* Hardware definitions... */
@@ -73,11 +63,11 @@
 #define TMS_PORT	JTAG_PORT
 #define TCK_PORT	JTAG_PORT
 #define TDO_PORT	JTAG_PORT
-#define TDI_PIN		GPIO3
+// #define TDI_PIN		GPIO3
 #define TMS_DIR_PIN	GPIO2
 #define TMS_PIN		GPIO0
 #define TCK_PIN		GPIO1
-#define TDO_PIN		GPIO6
+// #define TDO_PIN		GPIO6
 
 #define SWDIO_DIR_PORT	JTAG_PORT
 #define SWDIO_PORT 	JTAG_PORT
@@ -86,30 +76,10 @@
 #define SWDIO_PIN	TMS_PIN
 #define SWCLK_PIN	TCK_PIN
 
-#define TRST_PORT	GPIOB
-#define TRST_PIN	GPIO1
-#define PWR_BR_PORT	GPIOB
-#define PWR_BR_PIN	GPIO1
 #define SRST_PORT	GPIOA
 #define SRST_PIN	GPIO2
 #define SRST_SENSE_PORT	GPIOA
 #define SRST_SENSE_PIN	GPIO7
-
-//#define USB_PU_PORT	GPIOA
-//#define USB_PU_PIN	GPIO12
-
-// #define USB_VBUS_PORT	GPIOB
-// #define USB_VBUS_PIN	GPIO13
-// #define USB_VBUS_IRQ	NVIC_USB_IRQ
-
-#define LED_PORT	GPIOB
-#define LED_PORT_UART	GPIOB
-#define LED_0		GPIO2
-#define LED_1		GPIO10
-#define LED_2		GPIO11
-#define LED_UART	LED_0
-#define LED_IDLE_RUN	LED_1
-#define LED_ERROR	LED_2
 
 #define TMS_SET_MODE() do { \
 	gpio_set(TMS_DIR_PORT, TMS_DIR_PIN); \
@@ -130,14 +100,6 @@
 			SWDIO_PIN); \
 } while(0)
 
-#define UART_PIN_SETUP() do { \
-	gpio_mode_setup(USBUSART_PORT, GPIO_MODE_AF, GPIO_PUPD_PULLUP, \
-			USBUSART_TX_PIN); \
-	gpio_set_output_options(USBUSART_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_2MHZ, \
-			USBUSART_TX_PIN); \
-	gpio_set_af(USBUSART_PORT, GPIO_AF1, USBUSART_TX_PIN); \
-} while(0)
-
 #define USB_DRIVER st_usbfs_v2_usb_driver
 #define USB_IRQ    NVIC_USB_IRQ
 #define USB_ISR    usb_isr
@@ -146,22 +108,7 @@
  * TIM3 is used for traceswo capture and must be highest priority.
  */
 #define IRQ_PRI_USB             (2 << 6)
-#define IRQ_PRI_USBUSART        (1 << 4)
-#define IRQ_PRI_USBUSART_TIM    (3 << 4)
-#define IRQ_PRI_USB_VBUS        (14 << 4)
-#define IRQ_PRI_TRACE           (0 << 4)
-
-#define USBUSART USART1
-#define USBUSART_CR1 USART1_CR1
-#define USBUSART_IRQ NVIC_USART1_IRQ
-#define USBUSART_CLK RCC_USART1
-#define USBUSART_PORT GPIOA
-#define USBUSART_TX_PIN GPIO9
-#define USBUSART_ISR usart1_isr
-#define USBUSART_TIM TIM2
-#define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM2)
-#define USBUSART_TIM_IRQ NVIC_TIM2_IRQ
-#define USBUSART_TIM_ISR tim2_isr
+#define IRQ_PRI_TRACE           (0 << 5)
 
 #define TRACE_TIM TIM3
 #define TRACE_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM3)

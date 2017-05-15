@@ -71,9 +71,9 @@ void platform_init(void)
 	//		GPIO_CNF_OUTPUT_PUSHPULL,
 	//		TMS_DIR_PIN | TMS_PIN | TCK_PIN | TDI_PIN);
 	gpio_mode_setup(JTAG_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP,
-			TMS_DIR_PIN | TMS_PIN | TCK_PIN | TDI_PIN);
+			TMS_DIR_PIN | TMS_PIN | TCK_PIN);
 	gpio_set_output_options(JTAG_PORT, GPIO_OTYPE_PP, GPIO_OSPEED_50MHZ,
-			TMS_DIR_PIN | TMS_PIN | TCK_PIN | TDI_PIN);
+			TMS_DIR_PIN | TMS_PIN | TCK_PIN);
 	/* This needs some fixing... */
 	/* Toggle required to sort out line drivers... */
 	//gpio_port_write(GPIOA, 0x8102);
@@ -114,14 +114,6 @@ void platform_init(void)
 	//	              GPIO_CNF_OUTPUT_OPENDRAIN, PWR_BR_PIN);
 	//}
 
-	//gpio_clear(GPIOB, GPIO0);
-	//gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
-	//		GPIO_CNF_INPUT_PULL_UPDOWN, GPIO0);
-
-	/* Relocate interrupt vector table here */
-	// DOESN'T WORK ON THE CORTEX-M0!
-	// SCB_VTOR = 0x2000;
-
 	platform_timing_init();
 	cdcacm_init();
 }
@@ -152,17 +144,12 @@ bool platform_srst_get_val(void)
 
 bool platform_target_get_power(void)
 {
-	if (platform_hwversion() > 0) {
-		return !gpio_get(PWR_BR_PORT, PWR_BR_PIN);
-  	}
 	return 0;
 }
 
 void platform_target_set_power(bool power)
 {
-	if (platform_hwversion() > 0) {
-		gpio_set_val(PWR_BR_PORT, PWR_BR_PIN, !power);
-	}
+    (void) power;
 }
 
 const char *platform_target_voltage(void)
