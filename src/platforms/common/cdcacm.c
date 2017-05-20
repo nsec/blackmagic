@@ -540,7 +540,9 @@ static void cdcacm_set_config(usbd_device *dev, uint16_t wValue)
 	 * Allows the use of /dev/tty* devices on *BSD/MacOS
 	 */
 	cdcacm_set_modem_state(dev, 0, true, true);
+#if defined(PLATFORM_HAS_USBUART)
 	cdcacm_set_modem_state(dev, 2, true, true);
+#endif
 }
 
 /* We need a special large control buffer for this device: */
