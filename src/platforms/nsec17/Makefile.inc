@@ -19,6 +19,10 @@ else
 LDFLAGS += --specs=nosys.specs
 endif
 
+ifeq ($(FLAVOR), crossdebug)
+	CFLAGS += -DNSEC_BADGE_USE_EXTERNAL_PINS
+endif
+
 VPATH += platforms/stm32
 
 SRC += 	cdcacm.c	\
