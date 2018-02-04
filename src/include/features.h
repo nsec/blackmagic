@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2011  Black Sphere Technologies Ltd.
  * Written by Gareth McMullin <gareth@blacksphere.co.nz>
+ * This file by Marc-Etienne M.Léveillé <marc.etienne.ml@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,30 +19,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GENERAL_H
-#define __GENERAL_H
+#ifndef __FEATURES_H
+#define __FEATURES_H
 
-#define _GNU_SOURCE
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stddef.h>
-#include <inttypes.h>
-
-#include "features.h"
-#include "platform.h"
-#include "platform_support.h"
-
-#ifndef DEBUG
-#include <stdio.h>
-#define DEBUG	printf
+// To pick and choose the features and targets we want, we need to disable them
+// all first with -DENABLE_SELECTED_FEATURES_ONLY and then enable the ones we
+// want with -DENABLE_THINGS_WE_WANT. If nothing is defined, the default
+// behavior will be the same as before: build with all features.
+#ifndef ENABLE_SELECTED_FEATURES_ONLY
+#define ENABLE_TARGET_PROTO_JTAG
+#define ENABLE_TARGET_PROTO_SWDIO
 #endif
 
-#define ALIGN(x, n) (((x) + (n) - 1) & ~((n) - 1))
-#undef MIN
-#define MIN(x, y)  (((x) < (y)) ? (x) : (y))
-
+#if !(defined(ENABLE_TARGET_PROTO_JTAG) || defined(ENABLE_TARGET_PROTO_SWDIO))
+#error "You need to enable at least one of ENABLE_TARGET_PROTO_JTAG or ENABLE_TARGET_PROTO_SWDIO."
 #endif
 
+#endif

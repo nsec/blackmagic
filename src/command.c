@@ -46,8 +46,12 @@ struct command_s {
 static bool cmd_version(void);
 static bool cmd_help(target *t);
 
+#ifdef ENABLE_TARGET_PROTO_JTAG
 static bool cmd_jtag_scan(target *t, int argc, char **argv);
+#endif
+#ifdef ENABLE_TARGET_PROTO_SWDIO
 static bool cmd_swdp_scan(void);
+#endif
 static bool cmd_targets(void);
 static bool cmd_morse(void);
 static bool cmd_connect_srst(target *t, int argc, const char **argv);
@@ -65,8 +69,12 @@ static bool cmd_debug_bmp(target *t, int argc, const char **argv);
 const struct command_s cmd_list[] = {
 	{"version", (cmd_handler)cmd_version, "Display firmware version info"},
 	{"help", (cmd_handler)cmd_help, "Display help for monitor commands"},
+#ifdef ENABLE_TARGET_PROTO_JTAG
 	{"jtag_scan", (cmd_handler)cmd_jtag_scan, "Scan JTAG chain for devices" },
+#endif
+#ifdef ENABLE_TARGET_PROTO_SWDIO
 	{"swdp_scan", (cmd_handler)cmd_swdp_scan, "Scan SW-DP for devices" },
+#endif
 	{"targets", (cmd_handler)cmd_targets, "Display list of available targets" },
 	{"morse", (cmd_handler)cmd_morse, "Display morse error message" },
 	{"connect_srst", (cmd_handler)cmd_connect_srst, "Configure connect under SRST: (enable|disable)" },
@@ -145,6 +153,7 @@ bool cmd_help(target *t)
 	return true;
 }
 
+#ifdef ENABLE_TARGET_PROTO_JTAG
 static bool cmd_jtag_scan(target *t, int argc, char **argv)
 {
 	(void)t;
@@ -185,7 +194,9 @@ static bool cmd_jtag_scan(target *t, int argc, char **argv)
 	morse(NULL, false);
 	return true;
 }
+#endif
 
+#ifdef ENABLE_TARGET_PROTO_SWDIO
 bool cmd_swdp_scan(void)
 {
 	gdb_outf("Target voltage: %s\n", platform_target_voltage());
@@ -218,6 +229,7 @@ bool cmd_swdp_scan(void)
 	return true;
 
 }
+#endif
 
 static void display_target(int i, target *t, void *context)
 {
