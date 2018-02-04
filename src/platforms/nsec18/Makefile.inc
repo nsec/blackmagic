@@ -19,6 +19,9 @@ else
 LDFLAGS += --specs=nosys.specs
 endif
 
+CFLAGS += -DENABLE_SELECTED_FEATURES_ONLY
+CFLAGS += -DENABLE_TARGET_PROTO_SWDIO
+
 ifeq ($(FLAVOR), crossdebug)
 	CFLAGS += -DNSEC_BADGE_USE_EXTERNAL_PINS
 endif
