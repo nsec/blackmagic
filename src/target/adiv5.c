@@ -330,14 +330,18 @@ static void adiv5_component_probe(ADIv5_AP_t *ap, uint32_t addr)
 					      cidc_debug_strings[pidr_pn_bits[i].cidc]);
 				}
 				switch (pidr_pn_bits[i].arch) {
+#ifdef ENABLE_TARGET_ARCH_CORTEX_M
 				case aa_cortexm:
 					DEBUG("-> cortexm_probe\n");
 					cortexm_probe(ap);
 					break;
+#endif
+#ifdef ENABLE_TARGET_ARCH_CORTEX_A
 				case aa_cortexa:
 					DEBUG("-> cortexa_probe\n");
 					cortexa_probe(ap, addr);
 					break;
+#endif
 				default:
 					break;
 				}

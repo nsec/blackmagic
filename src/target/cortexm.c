@@ -254,20 +254,48 @@ bool cortexm_probe(ADIv5_AP_t *ap)
 #define PROBE(x) \
 	do { if ((x)(t)) return true; else target_check_error(t); } while (0)
 
+#ifdef ENABLE_TARGET_STM32F1
 	PROBE(stm32f1_probe);
+#endif
+#ifdef ENABLE_TARGET_STM32F4
 	PROBE(stm32f4_probe);
+#endif
+#ifdef ENABLE_TARGET_STM32L0
 	PROBE(stm32l0_probe);   /* STM32L0xx & STM32L1xx */
+#endif
+#ifdef ENABLE_TARGET_STM32L4
 	PROBE(stm32l4_probe);
+#endif
+#ifdef ENABLE_TARGET_LPC11XX
 	PROBE(lpc11xx_probe);
+#endif
+#ifdef ENABLE_TARGET_LPC15XX
 	PROBE(lpc15xx_probe);
+#endif
+#ifdef ENABLE_TARGET_LPC43XX
 	PROBE(lpc43xx_probe);
+#endif
+#ifdef ENABLE_TARGET_SAM3X
 	PROBE(sam3x_probe);
+#endif
+#ifdef ENABLE_TARGET_SAM4L
 	PROBE(sam4l_probe);
+#endif
+#ifdef ENABLE_TARGET_NRF51
 	PROBE(nrf51_probe);
+#endif
+#ifdef ENABLE_TARGET_SAMD
 	PROBE(samd_probe);
+#endif
+#ifdef ENABLE_TARGET_LMI
 	PROBE(lmi_probe);
+#endif
+#ifdef ENABLE_TARGET_KINETIS
 	PROBE(kinetis_probe);
+#endif
+#ifdef ENABLE_TARGET_EFM32
 	PROBE(efm32_probe);
+#endif
 #undef PROBE
 
 	return true;

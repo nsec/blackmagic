@@ -29,10 +29,50 @@
 #ifndef ENABLE_SELECTED_FEATURES_ONLY
 #define ENABLE_TARGET_PROTO_JTAG
 #define ENABLE_TARGET_PROTO_SWDIO
+
+#define ENABLE_TARGET_ARCH_CORTEX_M
+#define ENABLE_TARGET_STM32F1
+#define ENABLE_TARGET_STM32F4
+#define ENABLE_TARGET_STM32L0
+#define ENABLE_TARGET_STM32L4
+#define ENABLE_TARGET_LPC11XX
+#define ENABLE_TARGET_LPC15XX
+#define ENABLE_TARGET_LPC43XX
+#define ENABLE_TARGET_SAM3X
+#define ENABLE_TARGET_SAM4L
+#define ENABLE_TARGET_NRF51
+#define ENABLE_TARGET_SAMD
+#define ENABLE_TARGET_LMI
+#define ENABLE_TARGET_KINETIS
+#define ENABLE_TARGET_EFM32
+
+#define ENABLE_TARGET_ARCH_CORTEX_A
+
+#endif
+
+#if defined(ENABLE_TARGET_STM32F1) || \
+    defined(ENABLE_TARGET_STM32F4) || \
+    defined(ENABLE_TARGET_STM32L0) || \
+    defined(ENABLE_TARGET_STM32L4) || \
+    defined(ENABLE_TARGET_LPC11XX) || \
+    defined(ENABLE_TARGET_LPC15XX) || \
+    defined(ENABLE_TARGET_LPC43XX) || \
+    defined(ENABLE_TARGET_SAM3X) || \
+    defined(ENABLE_TARGET_SAM4L) || \
+    defined(ENABLE_TARGET_NRF51) || \
+    defined(ENABLE_TARGET_SAMD) || \
+    defined(ENABLE_TARGET_LMI) || \
+    defined(ENABLE_TARGET_KINETIS) || \
+    defined(ENABLE_TARGET_EFM32)
+#define ENABLE_TARGET_ARCH_CORTEX_M
 #endif
 
 #if !(defined(ENABLE_TARGET_PROTO_JTAG) || defined(ENABLE_TARGET_PROTO_SWDIO))
 #error "You need to enable at least one of ENABLE_TARGET_PROTO_JTAG or ENABLE_TARGET_PROTO_SWDIO."
+#endif
+
+#if !(defined(ENABLE_TARGET_ARCH_CORTEX_M) || defined(ENABLE_TARGET_ARCH_CORTEX_A))
+#error "You need to enable support for a least one target (ENABLE_TRAGET_*)."
 #endif
 
 #endif
