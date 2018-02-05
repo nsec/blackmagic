@@ -10,13 +10,13 @@ CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
 LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 -Wl,--defsym,_stack=0x20004000 \
 	-Wl,-T,platforms/nsec18/nsec18.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m0 -Wl,-gc-sections \
-	-L../../libopencm3/lib
+	-L../../libopencm3/lib -lnosys
 LDFLAGS = $(LDFLAGS_BOOT) -Wl,-Ttext=0x8000000
 
 ifeq ($(ENABLE_DEBUG), 1)
 LDFLAGS += --specs=rdimon.specs
 else
-LDFLAGS += --specs=nosys.specs
+LDFLAGS += --specs=nano.specs
 endif
 
 CFLAGS += -DENABLE_SELECTED_FEATURES_ONLY
