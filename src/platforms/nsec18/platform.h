@@ -28,8 +28,8 @@
 #include "timing.h"
 #include "timing_stm32.h"
 
-#define PLATFORM_HAS_TRACESWO
-#define PLATFORM_HAS_POWER_SWITCH
+// #define PLATFORM_HAS_TRACESWO
+// #define PLATFORM_HAS_POWER_SWITCH
 #ifdef ENABLE_DEBUG
 #define PLATFORM_HAS_DEBUG
 #define USBUART_DEBUG
