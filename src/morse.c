@@ -20,6 +20,7 @@
 #include "general.h"
 #include "morse.h"
 
+#ifdef ENABLE_MORSE
 /* Morse code patterns and lengths */
 static const struct {
 	uint16_t code;
@@ -98,3 +99,4 @@ bool morse_update(void)
 	return ret;
 }
 
+#endif

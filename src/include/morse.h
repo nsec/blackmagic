@@ -21,10 +21,15 @@
 #ifndef __MORSE_H
 #define __MORSE_H
 
+#ifdef ENABLE_MORSE
 extern const char *morse_msg;
 
 void morse(const char *msg, char repeat);
 bool morse_update(void);
+#else
+#define morse(a,b)
+#define morse_update()
+#endif
 
 #endif
 

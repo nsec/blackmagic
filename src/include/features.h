@@ -48,6 +48,8 @@
 
 #define ENABLE_TARGET_ARCH_CORTEX_A
 
+#define ENABLE_MORSE
+
 #endif
 
 #if defined(ENABLE_TARGET_STM32F1) || \

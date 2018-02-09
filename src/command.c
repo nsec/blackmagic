@@ -53,7 +53,9 @@ static bool cmd_jtag_scan(target *t, int argc, char **argv);
 static bool cmd_swdp_scan(void);
 #endif
 static bool cmd_targets(void);
+#ifdef ENABLE_MORSE
 static bool cmd_morse(void);
+#endif
 static bool cmd_connect_srst(target *t, int argc, const char **argv);
 static bool cmd_hard_srst(void);
 #ifdef PLATFORM_HAS_POWER_SWITCH
@@ -76,7 +78,9 @@ const struct command_s cmd_list[] = {
 	{"swdp_scan", (cmd_handler)cmd_swdp_scan, "Scan SW-DP for devices" },
 #endif
 	{"targets", (cmd_handler)cmd_targets, "Display list of available targets" },
+#ifdef ENABLE_MORSE
 	{"morse", (cmd_handler)cmd_morse, "Display morse error message" },
+#endif
 	{"connect_srst", (cmd_handler)cmd_connect_srst, "Configure connect under SRST: (enable|disable)" },
 	{"hard_srst", (cmd_handler)cmd_hard_srst, "Force a pulse on the hard SRST line - disconnects target" },
 #ifdef PLATFORM_HAS_POWER_SWITCH
@@ -249,12 +253,14 @@ bool cmd_targets(void)
 	return true;
 }
 
+#ifdef ENABLE_MORSE
 bool cmd_morse(void)
 {
 	if(morse_msg)
 		gdb_outf("%s\n", morse_msg);
 	return true;
 }
+#endif
 
 static bool cmd_connect_srst(target *t, int argc, const char **argv)
 {
