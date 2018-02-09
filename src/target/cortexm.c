@@ -97,6 +97,7 @@ static const uint32_t regnum_cortex_mf[] = {
 	0x58, 0x59, 0x5a, 0x5b, 0x5c, 0x5d, 0x5e, 0x5f,	/* s24-s31 */
 };
 
+#ifdef ENABLE_GDB_FEATURES_READ
 static const char tdesc_cortex_m[] =
 	"<?xml version=\"1.0\"?>"
 	"<!DOCTYPE target SYSTEM \"gdb-target.dtd\">"
@@ -173,6 +174,7 @@ static const char tdesc_cortex_mf[] =
 	"    <reg name=\"d15\" bitsize=\"64\" type=\"float\"/>"
 	"  </feature>"
 	"</target>";
+#endif
 
 ADIv5_AP_t *cortexm_ap(target *t)
 {
@@ -222,7 +224,9 @@ bool cortexm_probe(ADIv5_AP_t *ap)
 	t->detach = cortexm_detach;
 
 	/* Should probe here to make sure it's Cortex-M3 */
+#ifdef ENABLE_GDB_FEATURES_READ
 	t->tdesc = tdesc_cortex_m;
+#endif
 	t->regs_read = cortexm_regs_read;
 	t->regs_write = cortexm_regs_write;
 
@@ -244,7 +248,9 @@ bool cortexm_probe(ADIv5_AP_t *ap)
 	if (target_mem_read32(t, CORTEXM_CPACR) == cpacr) {
 		t->target_options |= TOPT_FLAVOUR_V7MF;
 		t->regs_size += sizeof(regnum_cortex_mf);
+#ifdef ENABLE_GDB_FEATURES_READ
 		t->tdesc = tdesc_cortex_mf;
+#endif
 	}
 
 	/* Default vectors to catch */

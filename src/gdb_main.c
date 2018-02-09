@@ -329,7 +329,11 @@ handle_q_packet(char *packet, int len)
 
 	} else if (!strncmp (packet, "qSupported", 10)) {
 		/* Query supported protocol features */
-		gdb_putpacket_f("PacketSize=%X;qXfer:memory-map:read+;qXfer:features:read+", BUF_SIZE);
+		gdb_putpacket_f("PacketSize=%X;qXfer:memory-map:read+"
+#ifdef ENABLE_GDB_FEATURES_READ
+			";qXfer:features:read+"
+#endif
+			, BUF_SIZE);
 
 	} else if (strncmp (packet, "qXfer:memory-map:read::", 23) == 0) {
 		/* Read target XML memory map */
@@ -343,7 +347,7 @@ handle_q_packet(char *packet, int len)
 			return;
 		}
 		handle_q_string_reply(target_mem_map(cur_target), packet + 23);
-
+#ifdef ENABLE_GDB_FEATURES_READ
 	} else if (strncmp (packet, "qXfer:features:read:target.xml:", 31) == 0) {
 		/* Read target description */
 		if((!cur_target) && last_target) {
@@ -356,6 +360,7 @@ handle_q_packet(char *packet, int len)
 			return;
 		}
 		handle_q_string_reply(target_tdesc(cur_target), packet + 31);
+#endif
 	} else if (sscanf(packet, "qCRC:%" PRIx32 ",%" PRIx32, &addr, &alen) == 2) {
 		if(!cur_target) {
 			gdb_putpacketz("E01");

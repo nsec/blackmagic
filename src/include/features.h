@@ -49,6 +49,7 @@
 #define ENABLE_TARGET_ARCH_CORTEX_A
 
 #define ENABLE_MORSE
+#define ENABLE_GDB_FEATURES_READ
 
 #endif
 

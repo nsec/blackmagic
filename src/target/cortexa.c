@@ -137,6 +137,7 @@ struct cortexa_priv {
 /* Thumb mode bit in CPSR */
 #define CPSR_THUMB               (1 << 5)
 
+#ifdef ENABLE_GDB_FEATURES_READ
 /* GDB register map / target description */
 static const char tdesc_cortex_a[] =
 	"<?xml version=\"1.0\"?>"
@@ -182,6 +183,7 @@ static const char tdesc_cortex_a[] =
 	"    <reg name=\"d15\" bitsize=\"64\" type=\"float\"/>"
 	"  </feature>"
 	"</target>";
+#endif
 
 static void apb_write(target *t, uint16_t reg, uint32_t val)
 {
@@ -389,7 +391,9 @@ bool cortexa_probe(ADIv5_AP_t *apb, uint32_t debug_base)
 	t->attach = cortexa_attach;
 	t->detach = cortexa_detach;
 
+#ifdef ENABLE_GDB_FEATURES_READ
 	t->tdesc = tdesc_cortex_a;
+#endif
 	t->regs_read = cortexa_regs_read;
 	t->regs_write = cortexa_regs_write;
 
