@@ -38,6 +38,7 @@
 #include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/f1/rcc.h>
 
+#ifdef PLATFORM_HAS_TRACESWO
 void traceswo_init(void)
 {
 	TRACE_TIM_CLK_EN();
@@ -183,3 +184,4 @@ flush_and_reset:
 	decbuf_pos = 0;
 	memset(decbuf, 0, sizeof(decbuf));
 }
+#endif
