@@ -37,11 +37,11 @@
 #include <libopencm3/stm32/adc.h>
 
 /* 
- * 2017 - nsec17 badge
+ * 2018 - nsec18 badge
  */
 int platform_hwversion(void)
 {
-	return 2017;
+	return 2018;
 }
 
 void platform_init(void)
