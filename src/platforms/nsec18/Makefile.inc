@@ -7,7 +7,7 @@ CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
 	-DSTM32F0 -DBLACKMAGIC -I../../libopencm3/include \
 	-Iplatforms/stm32 -Os
 
-LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 -Wl,--defsym,_stack=0x20004000 \
+LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 \
 	-Wl,-T,platforms/nsec18/nsec18.ld -nostartfiles -lc \
 	-Wl,-Map=mapfile -mthumb -mcpu=cortex-m0 -Wl,-gc-sections \
 	-L../../libopencm3/lib -lnosys
