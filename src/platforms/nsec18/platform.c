@@ -35,6 +35,7 @@
 #include <libopencm3/stm32/usart.h>
 #include <libopencm3/usb/usbd.h>
 #include <libopencm3/stm32/adc.h>
+#include <libopencm3/stm32/syscfg.h>
 
 /* 
  * 2018 - nsec18 badge
@@ -52,15 +53,19 @@ void platform_init(void)
 	initialise_monitor_handles();
 #endif
 
-	rcc_clock_setup_in_hsi48_out_48mhz();
+	rcc_periph_clock_enable(RCC_SYSCFG_COMP);
+	SYSCFG_CFGR1 |= SYSCFG_CFGR1_PA11_PA12_RMP;
+
+	//On the final board we will need to create a function
+	//rcc_clock_setup_in_hse_16mhz_out_48mhz
+	rcc_clock_setup_in_hse_8mhz_out_48mhz();
 
 	/* Enable peripherals */
 	rcc_periph_clock_enable(RCC_USB);
 	rcc_periph_clock_enable(RCC_GPIOA);
 	rcc_periph_clock_enable(RCC_GPIOB);
-	rcc_periph_clock_enable(RCC_SYSCFG_COMP);
 	rcc_periph_clock_enable(RCC_CRC);
-	rcc_set_usbclk_source(RCC_HSI48);
+	rcc_set_usbclk_source(RCC_PLL);
 
 	gpio_mode_setup(JTAG_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP,
 			TMS_DIR_PIN | TMS_PIN | TCK_PIN);

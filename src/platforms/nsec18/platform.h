@@ -34,19 +34,19 @@
 #define PLATFORM_HAS_DEBUG
 #define USBUART_DEBUG
 #endif
-#define BOARD_IDENT             "NorthSec 2017 Probe"
-#define BOARD_IDENT_DFU	        "NorthSec 2017 Probe (Upgrade)"
-#define BOARD_IDENT_UPD	        "NorthSec 2017 Probe (DFU Upgrade)"
-#define DFU_IDENT               "NorthSec 2017 Firmware Upgrade"
+#define BOARD_IDENT             "NorthSec 2018 Probe"
+#define BOARD_IDENT_DFU	        "NorthSec 2018 Probe (Upgrade)"
+#define BOARD_IDENT_UPD	        "NorthSec 2018 Probe (DFU Upgrade)"
+#define DFU_IDENT               "NorthSec 2018 Firmware Upgrade"
 #define DFU_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Ka,120*001Kg"
 #define UPD_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Kg"
 
 /* Important pin mappings for NorthSec badge implementation:
- * uC is a STM32f072cbt6.
+ * uC is a STM32F070F6P6.
  *
- * nFR51 (internal) SWDIO/TMS: PB0
- * nFR51 (internal) SWCLK/TCK: PB1
- * nFR51 (internal) SWDIR/DIR: PB2 (?)
+ * nFR52 (internal) SWDIO/TMS: PA5
+ * nFR52 (internal) SWCLK/TCK: PA6
+ * nFR52 (internal) nRST: PA7
  *
  * External SWDIO/TMS: PB12
  * External SWCLK/TCK: PB15
@@ -57,7 +57,7 @@
  */
 
 /* Hardware definitions... */
-#define JTAG_PORT 	GPIOB
+#define JTAG_PORT 	GPIOA
 #define TDI_PORT	JTAG_PORT
 #define TMS_DIR_PORT	JTAG_PORT
 #define TMS_PORT	JTAG_PORT
@@ -69,9 +69,9 @@
 #define TMS_PIN		GPIO12
 #define TCK_PIN		GPIO15
 #else
-#define TMS_DIR_PIN	GPIO2
-#define TMS_PIN		GPIO0
-#define TCK_PIN		GPIO1
+#define TMS_DIR_PIN	GPIO0
+#define TMS_PIN		GPIO5
+#define TCK_PIN		GPIO6
 #endif
 // #define TDO_PIN		GPIO6
 
