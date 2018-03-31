@@ -442,8 +442,10 @@ void adiv5_dp_init(ADIv5_DP_t *dp)
 		if (ap == NULL)
 			continue;
 
+#ifdef ENABLE_TARGET_KINETIS
 		extern void kinetis_mdm_probe(ADIv5_AP_t *);
 		kinetis_mdm_probe(ap);
+#endif
 
 		if (ap->base == 0xffffffff) {
 			/* No debug entries... useless AP */
