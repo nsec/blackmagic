@@ -53,7 +53,11 @@ void usbuart_init(void)
 	/* Setup UART parameters. */
 	usart_set_baudrate(USBUSART, 38400);
 	usart_set_databits(USBUSART, 8);
+#if defined(USART_CR2_STOP_1_0BIT)
 	usart_set_stopbits(USBUSART, USART_CR2_STOP_1_0BIT);
+#else
+	usart_set_stopbits(USBUSART, USART_STOPBITS_1);
+#endif
 	usart_set_mode(USBUSART, USART_MODE_TX_RX);
 	usart_set_parity(USBUSART, USART_PARITY_NONE);
 	usart_set_flow_control(USBUSART, USART_FLOWCONTROL_NONE);
@@ -72,7 +76,11 @@ void usbuart_init(void)
 	timer_set_mode(USBUSART_TIM, TIM_CR1_CKD_CK_INT,
 			TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
 	timer_set_prescaler(USBUSART_TIM,
+#if defined(STM32F0)
 			rcc_apb1_frequency / USBUART_TIMER_FREQ_HZ * 2 - 1);
+#else
+			rcc_apb2_frequency / USBUART_TIMER_FREQ_HZ * 2 - 1);
+#endif
 	timer_set_period(USBUSART_TIM,
 			USBUART_TIMER_FREQ_HZ / USBUART_RUN_FREQ_HZ - 1);
 
@@ -140,13 +148,25 @@ void usbuart_set_line_coding(struct usb_cdc_line_coding *coding)
 
 	switch(coding->bCharFormat) {
 	case 0:
+#if defined(USART_CR2_STOP_1_0BIT)
 		usart_set_stopbits(USBUSART, USART_CR2_STOP_1_0BIT);
+#else
+		usart_set_stopbits(USBUSART, USART_STOPBITS_1);
+#endif
 		break;
 	case 1:
+#if defined(USART_CR2_STOP_1_5BIT)
 		usart_set_stopbits(USBUSART, USART_CR2_STOP_1_5BIT);
+#else
+		usart_set_stopbits(USBUSART, USART_STOPBITS_1_5);
+#endif
 		break;
 	case 2:
+#if defined(USART_CR2_STOP_2_0BIT)
 		usart_set_stopbits(USBUSART, USART_CR2_STOP_2_0BIT);
+#else
+		usart_set_stopbits(USBUSART, USART_STOPBITS_2);
+#endif
 		break;
 	}
 
@@ -215,9 +235,16 @@ void usbuart_usb_in_cb(usbd_device *dev, uint8_t ep)
  */
 void USBUSART_ISR(void)
 {
+#if defined(USART_ISR)
+	// STM32F0 and F3
 	uint32_t err = USART_ISR(USBUSART);
 	char c = usart_recv(USBUSART);
 	if (err & (USART_ISR_ORE | USART_ISR_FE))
+#else
+	uint32_t err = USART_SR(USBUSART);
+	char c = usart_recv(USBUSART);
+	if (err & (USART_SR_ORE | USART_SR_FE | USART_SR_NE))
+#endif
 		return;
 
 	/* Turn on LED */
@@ -250,3 +277,57 @@ void USBUSART_TIM_ISR(void)
 	/* process FIFO */
 	usbuart_run();
 }
+
+#ifdef ENABLE_DEBUG
+enum {
+	RDI_SYS_OPEN = 0x01,
+	RDI_SYS_WRITE = 0x05,
+	RDI_SYS_ISTTY = 0x09,
+};
+
+int rdi_write(int fn, const char *buf, size_t len)
+{
+	(void)fn;
+	if (debug_bmp)
+		return len - usbuart_debug_write(buf, len);
+
+	return 0;
+}
+
+struct ex_frame {
+	union {
+		int syscall;
+		int retval;
+	};
+	const int *params;
+	uint32_t r2, r3, r12, lr, pc;
+};
+
+void debug_monitor_handler_c(struct ex_frame *sp)
+{
+	/* Return to after breakpoint instruction */
+	sp->pc += 2;
+
+	switch (sp->syscall) {
+	case RDI_SYS_OPEN:
+		sp->retval = 1;
+		break;
+	case RDI_SYS_WRITE:
+		sp->retval = rdi_write(sp->params[0], (void*)sp->params[1], sp->params[2]);
+		break;
+	case RDI_SYS_ISTTY:
+		sp->retval = 1;
+		break;
+	default:
+		sp->retval = -1;
+	}
+
+}
+
+asm(".globl debug_monitor_handler\n"
+    ".thumb_func\n"
+    "debug_monitor_handler: \n"
+    "    mov r0, sp\n"
+    "    b debug_monitor_handler_c\n");
+
+#endif

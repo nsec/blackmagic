@@ -25,6 +25,11 @@
  * ST doc - RM0008
  *   Reference manual - STM32F101xx, STM32F102xx, STM32F103xx, STM32F105xx
  *   and STM32F107xx advanced ARM-based 32-bit MCUs
+ * ST doc - RM0091
+ *   Reference manual - STM32F0x1/STM32F0x2/STM32F0x8
+ *   advanced ARM®-based 32-bit MCUs
+ * ST doc - RM0360
+ *   Reference manual - STM32F030x4/x6/x8/xC and STM32F070x6/xB
  * ST doc - PM0075
  *   Programming manual - STM32F10xxx Flash memory microcontrollers
  */
@@ -131,11 +136,13 @@ bool stm32f1_probe(target *t)
 		stm32f1_add_flash(t, 0x8000000, 0x80000, 0x800);
 		target_add_commands(t, stm32f1_cmd_list, "STM32 HD/CL");
 		return true;
-	case 0x422:  /* STM32F30x */
-	case 0x432:  /* STM32F37x */
 	case 0x438:  /* STM32F303x6/8 and STM32F328 */
-	case 0x439:  /* STM32F302C8 */
+	case 0x422:  /* STM32F30x */
 	case 0x446:  /* STM32F303xD/E and STM32F398xE */
+		target_add_ram(t, 0x10000000, 0x4000);
+		/* fall through */
+	case 0x432:  /* STM32F37x */
+	case 0x439:  /* STM32F302C8 */
 		t->driver = "STM32F3";
 		target_add_ram(t, 0x20000000, 0x10000);
 		stm32f1_add_flash(t, 0x8000000, 0x80000, 0x800);
@@ -145,21 +152,21 @@ bool stm32f1_probe(target *t)
 
 	t->idcode = target_mem_read32(t, DBGMCU_IDCODE_F0) & 0xfff;
 	switch(t->idcode) {
-	case 0x444:  /* STM32F03 RM0091 Rev.7 */
+	case 0x444:  /* STM32F03 RM0091 Rev.7, STM32F030x[4|6] RM0360 Rev. 4*/
 		t->driver = "STM32F03";
 		break;
-	case 0x445:  /* STM32F04 RM0091 Rev.7 */
-		t->driver = "STM32F04";
+	case 0x445:  /* STM32F04 RM0091 Rev.7, STM32F070x6 RM0360 Rev. 4*/
+		t->driver = "STM32F04/F070x6";
 		break;
-	case 0x440:  /* STM32F05 RM0091 Rev.7 */
-		t->driver = "STM32F05";
+	case 0x440:  /* STM32F05 RM0091 Rev.7, STM32F030x8 RM0360 Rev. 4*/
+		t->driver = "STM32F05/F030x8";
 		break;
-	case 0x448:  /* STM32F07 RM0091 Rev.7 */
+	case 0x448:  /* STM32F07 RM0091 Rev.7, STM32F070xB RM0360 Rev. 4*/
 		t->driver = "STM32F07";
 		block_size = 0x800;
 		break;
-	case 0x442:  /* STM32F09 RM0091 Rev.7 */
-		t->driver = "STM32F09";
+	case 0x442:  /* STM32F09 RM0091 Rev.7, STM32F030xC RM0360 Rev. 4*/
+		t->driver = "STM32F09/F030xC";
 		block_size = 0x800;
 		break;
 	default:     /* NONE */

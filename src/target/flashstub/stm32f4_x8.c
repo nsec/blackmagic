@@ -1,8 +1,8 @@
 /*
  * This file is part of the Black Magic Debug project.
  *
- * Copyright (C) 2011  Black Sphere Technologies Ltd.
- * Written by Gareth McMullin <gareth@blacksphere.co.nz>
+ * Copyright (C) 2017  Black Sphere Technologies Ltd.
+ * Written by Gordon Smith <gordonhj.smith@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,36 +17,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "libopencm3/stm32/flash.h"
+#include "stub.h"
 
-#ifndef __JTAG_SCAN_H
-#define __JTAG_SCAN_H
+#define SR_ERROR_MASK 0xF2
 
-#define JTAG_MAX_DEVS	32
-#define JTAG_MAX_IR_LEN	16
+void __attribute__((naked))
+stm32f4_flash_write_x8_stub(uint32_t *dest, uint32_t *src, uint32_t size)
+{
+	uint8_t *b_dest, *b_src;
+	b_dest = (void *)dest;
+	b_src = (void *)src;
+	for (int i = 0; i < size; i += 1) {
+		FLASH_CR = FLASH_CR_PROGRAM_X8 | FLASH_CR_PG;
+		*b_dest++ = *b_src++;
+		__asm("dsb");
+		while (FLASH_SR & FLASH_SR_BSY)
+			;
+	}
 
-typedef struct jtag_dev_s {
-	union {
-		uint8_t dev;
-		uint8_t dr_prescan;
-	};
-	uint8_t dr_postscan;
+	if (FLASH_SR & SR_ERROR_MASK)
+		stub_exit(1);
 
-	uint8_t ir_len;
-	uint8_t ir_prescan;
-	uint8_t ir_postscan;
-
-	uint32_t idcode;
-	const char *descr;
-
-	uint32_t current_ir;
-
-} jtag_dev_t;
-
-extern struct jtag_dev_s jtag_devs[JTAG_MAX_DEVS+1];
-extern int jtag_dev_count;
-
-void jtag_dev_write_ir(jtag_dev_t *dev, uint32_t ir);
-void jtag_dev_shift_dr(jtag_dev_t *dev, uint8_t *dout, const uint8_t *din, int ticks);
-
-#endif
+	stub_exit(0);
+}
 
