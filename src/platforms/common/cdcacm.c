@@ -390,7 +390,11 @@ static const struct usb_config_descriptor config = {
 	.interface = ifaces,
 };
 
+#if defined(STM32L0) || defined(STM32F3) || defined(STM32F4)
+char serial_no[13];
+#else
 char serial_no[9];
+#endif
 
 static const char *usb_strings[] = {
 	"Black Sphere Technologies",
@@ -445,6 +449,7 @@ static int cdcacm_control_request(usbd_device *dev,
 		switch(req->wIndex) {
 		case 2:
 			usbuart_set_line_coding((struct usb_cdc_line_coding*)*buf);
+			return 1;
 		case 0:
 			return 1; /* Ignore on GDB Port */
 		default:
@@ -462,6 +467,7 @@ static int cdcacm_control_request(usbd_device *dev,
 
 			return 1;
 		}
+		return 0;
 	case DFU_DETACH:
 		if(req->wIndex == DFU_IF_NO) {
 			*complete = dfu_detach_complete;
@@ -561,4 +567,3 @@ void USB_ISR(void)
 {
 	usbd_poll(usbdev);
 }
-
