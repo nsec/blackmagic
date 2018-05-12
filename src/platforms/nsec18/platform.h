@@ -65,14 +65,17 @@
 #define TDO_PORT	JTAG_PORT
 // #define TDI_PIN		GPIO3
 #ifdef NSEC_BADGE_USE_EXTERNAL_PINS
-#define TMS_DIR_PIN	GPIO3
-#define TMS_PIN		GPIO12
-#define TCK_PIN		GPIO15
+#define TMS_DIR_PORT	GPIOB
+#define TMS_DIR_PIN	GPIO1
+#define TMS_PIN		GPIO4
+#define TCK_PIN		GPIO5
 #else
-#define TMS_DIR_PIN	GPIO0
-#define TMS_PIN		GPIO5
-#define TCK_PIN		GPIO6
+#define TMS_DIR_PORT	JTAG_PORT
+#define TMS_DIR_PIN	GPIO4
+#define TMS_PIN		GPIO1
+#define TCK_PIN		GPIO2
 #endif
+
 // #define TDO_PIN		GPIO6
 
 #define SWDIO_DIR_PORT	JTAG_PORT
