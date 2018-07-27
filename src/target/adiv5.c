@@ -447,6 +447,9 @@ void adiv5_dp_init(ADIv5_DP_t *dp)
 		kinetis_mdm_probe(ap);
 #endif
 
+		extern void nrf51_mdm_probe(ADIv5_AP_t *);
+		nrf51_mdm_probe(ap);
+
 		if (ap->base == 0xffffffff) {
 			/* No debug entries... useless AP */
 			adiv5_ap_unref(ap);
