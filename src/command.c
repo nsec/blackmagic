@@ -133,10 +133,12 @@ int command_process(target *t, char *cmd)
 
 bool cmd_version(void)
 {
+#if 0
 	gdb_outf("Black Magic Probe (Firmware " FIRMWARE_VERSION ") (Hardware Version %d)\n", platform_hwversion());
 	gdb_out("Copyright (C) 2015  Black Sphere Technologies Ltd.\n");
 	gdb_out("License GPLv3+: GNU GPL version 3 or later "
 		"<http://gnu.org/licenses/gpl.html>\n\n");
+#endif
 
 	return true;
 }
@@ -182,7 +184,7 @@ static bool cmd_jtag_scan(target *t, int argc, char **argv)
 	}
 	switch (e.type) {
 	case EXCEPTION_TIMEOUT:
-		gdb_outf("Timeout during scan. Is target stuck in WFI?\n");
+		gdb_out("Timeout during scan.\n");
 		break;
 	case EXCEPTION_ERROR:
 		gdb_outf("Exception: %s\n", e.msg);

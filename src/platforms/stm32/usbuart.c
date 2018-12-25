@@ -109,7 +109,9 @@ static void usbuart_run(void)
 	if (buf_rx_in == buf_rx_out) {
 		/* turn off LED, disable IRQ */
 		timer_disable_irq(USBUSART_TIM, TIM_DIER_UIE);
+#ifdef LED_PORT_UART
 		gpio_clear(LED_PORT_UART, LED_UART);
+#endif
 	}
 	else
 	{
@@ -199,10 +201,14 @@ void usbuart_usb_out_cb(usbd_device *dev, uint8_t ep)
 		return;
 #endif
 
+#ifdef LED_PORT_UART
 	gpio_set(LED_PORT_UART, LED_UART);
+#endif
 	for(int i = 0; i < len; i++)
 		usart_send_blocking(USBUSART, buf[i]);
+#ifdef LED_PORT_UART
 	gpio_clear(LED_PORT_UART, LED_UART);
+#endif
 }
 
 #ifdef USBUART_DEBUG
@@ -248,7 +254,9 @@ void USBUSART_ISR(void)
 		return;
 
 	/* Turn on LED */
+#ifdef LED_PORT_UART
 	gpio_set(LED_PORT_UART, LED_UART);
+#endif
 
 	/* If the next increment of rx_in would put it at the same point
 	* as rx_out, the FIFO is considered full.
