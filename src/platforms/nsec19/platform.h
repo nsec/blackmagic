@@ -72,8 +72,8 @@
 #else
 #define TMS_DIR_PORT	JTAG_PORT
 #define TMS_DIR_PIN	GPIO4
-#define TMS_PIN		GPIO1
-#define TCK_PIN		GPIO2
+#define TMS_PIN		GPIO5
+#define TCK_PIN		GPIO6
 #endif
 
 // #define TDO_PIN		GPIO6
@@ -86,7 +86,7 @@
 #define SWCLK_PIN	TCK_PIN
 
 #define SRST_PORT	GPIOA
-#define SRST_PIN	GPIO2
+#define SRST_PIN	GPIO7
 #define SRST_SENSE_PORT	GPIOA
 #define SRST_SENSE_PIN	GPIO7
 
