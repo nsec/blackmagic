@@ -13,11 +13,11 @@ LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 \
 	-L../../libopencm3/lib -lnosys
 LDFLAGS = $(LDFLAGS_BOOT) -Wl,-Ttext=0x8000000
 
-#ifeq ($(ENABLE_DEBUG), 1)
-#LDFLAGS += --specs=rdimon.specs
-#else
-#LDFLAGS += --specs=nano.specs
-#endif
+ifeq ($(ENABLE_DEBUG), 1)
+LDFLAGS += --specs=rdimon.specs
+else
+LDFLAGS += --specs=nano.specs
+endif
 
 CFLAGS += -DENABLE_SELECTED_FEATURES_ONLY
 CFLAGS += -DENABLE_TARGET_PROTO_SWDIO
