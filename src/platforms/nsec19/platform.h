@@ -34,12 +34,13 @@
 #define PLATFORM_HAS_DEBUG
 #define USBUART_DEBUG
 #endif
-#define BOARD_IDENT             "NorthSec 2018 Probe"
-#define BOARD_IDENT_DFU	        "NorthSec 2018 Probe (Upgrade)"
-#define BOARD_IDENT_UPD	        "NorthSec 2018 Probe (DFU Upgrade)"
-#define DFU_IDENT               "NorthSec 2018 Firmware Upgrade"
+#define BOARD_IDENT             "NorthSec 2019 Probe"
+#define BOARD_IDENT_DFU	        "NorthSec 2019 Probe (Upgrade)"
+#define BOARD_IDENT_UPD	        "NorthSec 2019 Probe (DFU Upgrade)"
+#define DFU_IDENT               "NorthSec 2019 Firmware Upgrade"
 #define DFU_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Ka,120*001Kg"
 #define UPD_IFACE_STRING        "@Internal Flash   /0x08000000/8*001Kg"
+#define PLATFORM_HAS_USBUART
 
 /* Important pin mappings for NorthSec badge implementation:
  * uC is a STM32F070F6P6.

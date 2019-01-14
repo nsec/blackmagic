@@ -72,6 +72,7 @@ void platform_init(void)
 			TMS_DIR_PIN | TMS_PIN | TCK_PIN);
 
 	platform_timing_init();
+	usbuart_init();
 	cdcacm_init();
 }
 
