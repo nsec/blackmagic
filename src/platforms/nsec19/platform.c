@@ -74,6 +74,9 @@ void platform_init(void)
 	platform_timing_init();
 	usbuart_init();
 	cdcacm_init();
+
+	/* The almighty status led.  */
+	gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO1);
 }
 
 void platform_srst_set_val(bool assert)

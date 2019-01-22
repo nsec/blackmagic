@@ -131,10 +131,10 @@
 #define USBUSART_RX_PORT GPIOA
 #define USBUSART_RX_PIN  GPIO9
 #define USBUSART_ISR usart2_isr
-#define USBUSART_TIM TIM7
-#define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM7)
-#define USBUSART_TIM_IRQ NVIC_TIM7_IRQ
-#define USBUSART_TIM_ISR tim7_isr
+#define USBUSART_TIM TIM14
+#define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM14)
+#define USBUSART_TIM_IRQ NVIC_TIM14_IRQ
+#define USBUSART_TIM_ISR tim14_isr
 
 #define UART_PIN_SETUP() do { \
 	gpio_mode_setup(USBUSART_TX_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, \
