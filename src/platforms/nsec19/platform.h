@@ -129,7 +129,7 @@
 #define USBUSART_TX_PORT GPIOA
 #define USBUSART_TX_PIN  GPIO2
 #define USBUSART_RX_PORT GPIOA
-#define USBUSART_RX_PIN  GPIO9
+#define USBUSART_RX_PIN  GPIO3
 #define USBUSART_ISR usart2_isr
 #define USBUSART_TIM TIM14
 #define USBUSART_TIM_CLK_EN() rcc_periph_clock_enable(RCC_TIM14)
