@@ -4,7 +4,7 @@ OBJCOPY = $(CROSS_COMPILE)objcopy
 AR = $(CROSS_COMPILE)ar
 
 CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
-	-DSTM32F0 -DBLACKMAGIC -I../../libopencm3/include \
+	-DSTM32F0 -I../../libopencm3/include \
 	-Iplatforms/stm32 -Os
 
 LDFLAGS_BOOT := $(LDFLAGS) -lopencm3_stm32f0 \
