@@ -246,12 +246,17 @@ void USBUSART_ISR(void)
 	uint32_t err = USART_ISR(USBUSART);
 	char c = usart_recv(USBUSART);
 	if (err & (USART_ISR_ORE | USART_ISR_FE))
+	{
+		USART_ICR(USART2) = USART_ICR_ORECF;
+		USART_ICR(USART2) = USART_ICR_FECF;
+		return;
+	}
 #else
 	uint32_t err = USART_SR(USBUSART);
 	char c = usart_recv(USBUSART);
 	if (err & (USART_SR_ORE | USART_SR_FE | USART_SR_NE))
-#endif
 		return;
+#endif
 
 	/* Turn on LED */
 #ifdef LED_PORT_UART
