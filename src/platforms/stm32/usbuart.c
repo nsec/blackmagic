@@ -51,7 +51,7 @@ void usbuart_init(void)
 	UART_PIN_SETUP();
 
 	/* Setup UART parameters. */
-	usart_set_baudrate(USBUSART, 38400);
+	usart_set_baudrate(USBUSART, 115200);
 	usart_set_databits(USBUSART, 8);
 #if defined(USART_CR2_STOP_1_0BIT)
 	usart_set_stopbits(USBUSART, USART_CR2_STOP_1_0BIT);
