@@ -369,9 +369,11 @@ static bool nrf51_cmd_read(target *t, int argc, const char *argv[])
 #define NRF52_MDM_IDR 0x02880000
 
 static bool nrf51_mdm_cmd_erase_mass(target *t);
+static bool nrf51_mdm_cmd_approtect_status(target *t);
 
 const struct command_s nrf51_mdm_cmd_list[] = {
 	{"erase_mass", (cmd_handler)nrf51_mdm_cmd_erase_mass, "Erase entire flash memory"},
+	{"approtect_status", (cmd_handler)nrf51_mdm_cmd_approtect_status, "Get approtect status"},
 	{NULL, NULL, NULL}
 };
 
@@ -440,5 +442,19 @@ static bool nrf51_mdm_cmd_erase_mass(target *t)
 	status = adiv5_ap_read(ap, MDM_PROT_EN);
 
 	// should we return the prot status here?
+	return true;
+}
+
+static bool nrf51_mdm_cmd_approtect_status(target *t)
+{
+	ADIv5_AP_t *ap = t->priv;
+
+	uint32_t status = adiv5_ap_read(ap, MDM_PROT_EN);
+	if (status) {
+		tc_printf(t, "disable\n");
+	} else {
+		tc_printf(t, "enable\n");
+	}
+
 	return true;
 }
