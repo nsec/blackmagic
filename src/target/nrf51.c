@@ -31,6 +31,7 @@ static int nrf51_flash_write(struct target_flash *f,
                              target_addr dest, const void *src, size_t len);
 
 static bool nrf51_cmd_erase_all(target *t);
+static bool nrf51_cmd_enable_approtect(target *t);
 static bool nrf51_cmd_read_hwid(target *t);
 static bool nrf51_cmd_read_fwid(target *t);
 static bool nrf51_cmd_read_deviceid(target *t);
@@ -40,6 +41,7 @@ static bool nrf51_cmd_read(target *t, int argc, const char *argv[]);
 
 const struct command_s nrf51_cmd_list[] = {
 	{"erase_mass", (cmd_handler)nrf51_cmd_erase_all, "Erase entire flash memory"},
+	{"enable_approtect", (cmd_handler)nrf51_cmd_enable_approtect, "Enable approtect feature" },
 	{"read", (cmd_handler)nrf51_cmd_read, "Read device parameters"},
 	{NULL, NULL, NULL}
 };
@@ -77,6 +79,7 @@ const struct command_s nrf51_read_cmd_list[] = {
 
 /* User Information Configuration Registers (UICR) */
 #define NRF51_UICR				0x10001000
+#define nRF51_UICR_APPROTECT	(NRF51_UICR + 0x208)
 
 #define NRF51_PAGE_SIZE 1024
 #define NRF52_PAGE_SIZE 4096
@@ -271,6 +274,28 @@ static bool nrf51_cmd_erase_all(target *t)
 	target_mem_write32(t, NRF51_NVMC_ERASEALL, 1);
 
 	/* Poll for NVMC_READY */
+	while (target_mem_read32(t, NRF51_NVMC_READY) == 0)
+		if(target_check_error(t))
+			return false;
+
+	return true;
+}
+
+static bool nrf51_cmd_enable_approtect(target *t)
+{
+	tc_printf(t, "Enabling Approtect\n");
+
+	/* Enable write */
+	target_mem_write32(t, NRF51_NVMC_CONFIG, NRF51_NVMC_CONFIG_WEN);
+
+	/* Poll for NVMC_READY */
+	while (target_mem_read32(t, NRF51_NVMC_READY) == 0)
+		if(target_check_error(t))
+			return false;
+
+	/* enabling app protect */
+	target_mem_write32(t, nRF51_UICR_APPROTECT, 0);
+
 	while (target_mem_read32(t, NRF51_NVMC_READY) == 0)
 		if(target_check_error(t))
 			return false;
