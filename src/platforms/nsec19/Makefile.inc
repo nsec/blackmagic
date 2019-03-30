@@ -3,6 +3,10 @@ CC = $(CROSS_COMPILE)gcc
 OBJCOPY = $(CROSS_COMPILE)objcopy
 AR = $(CROSS_COMPILE)ar
 
+ifeq ($(TRACK), soldering)
+CFLAGS += -DSOLDERING_TRACK
+endif
+
 CFLAGS += -Istm32/include -mcpu=cortex-m0 -mthumb \
 	-DSTM32F0 -I../../libopencm3/include \
 	-Iplatforms/stm32 -Os

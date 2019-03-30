@@ -394,7 +394,11 @@ static const struct usb_config_descriptor config = {
 #if defined(STM32L0) || defined(STM32F3) || defined(STM32F4)
 char serial_no[13];
 #else
+#ifdef SOLDERING_TRACK
+char serial_no[43];
+#else
 char serial_no[9];
+#endif
 #endif
 
 static const char *usb_strings[] = {
@@ -558,7 +562,11 @@ void cdcacm_init(void)
 {
 	void exti15_10_isr(void);
 
+#ifdef SOLDERING_TRACK
+	strcpy(serial_no, "FLAG-7c152978-f3c2-464e-8c12-4446518fc542A");
+#else
 	serialno_read(serial_no);
+#endif
 
 	usbdev = usbd_init(&USB_DRIVER, &dev, &config, usb_strings,
 			    sizeof(usb_strings)/sizeof(char *),
