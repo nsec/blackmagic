@@ -1,5 +1,6 @@
 src/include/version.h
 blackmagic
+blackmagic-soldering
 *.bin
 *.hex
 blackmagic_dfu
