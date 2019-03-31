@@ -82,7 +82,7 @@ blackmagic-soldering: include/version.h $(OBJ_SOLDERING)
 
 %-soldering.o: %.c
 	@echo "  CC      $<"
-	$(Q)$(CC) $(CFLAGS) -DTRACK=soldering -c $< -o $@
+	$(Q)$(CC) $(CFLAGS) -DSOLDERING_TRACK -c $< -o $@
 
 %.bin:	%
 	@echo "  OBJCOPY $@"
