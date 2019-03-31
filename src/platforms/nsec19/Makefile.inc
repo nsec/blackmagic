@@ -34,12 +34,16 @@ endif
 
 VPATH += platforms/stm32
 
-SRC += 	cdcacm.c	\
+SRC_COMMON = \
 	usbuart.c	\
 	traceswo.c	\
 	serialno.c	\
 	timing.c	\
-	timing_stm32.c	\
+	timing_stm32.c
+
+SRC += $(SRC_COMMON) cdcacm.c
+
+SRC_SOLDERING += $(SRC_COMMON) cdcacm-soldering.c
 
 all:	blackmagic.bin libblackmagic.a
 

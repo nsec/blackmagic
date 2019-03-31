@@ -57,19 +57,32 @@ SRC =			\
 	stm32l4.c	\
 	swdptap.c	\
 	swdptap_generic.c	\
-	target.c	\
+	target.c
+
+SRC_SOLDERING := $(SRC)
 
 include $(PLATFORM_DIR)/Makefile.inc
 
 OBJ = $(SRC:.c=.o)
+OBJ_SOLDERING = $(SRC_SOLDERING:.c=.o)
+
+all: blackmagic blackmagic-soldering
 
 blackmagic: include/version.h $(OBJ)
 	@echo "  LD      $@"
 	$(Q)$(CC) -o $@ $(OBJ) $(LDFLAGS)
 
+blackmagic-soldering: include/version.h $(OBJ_SOLDERING)
+	@echo "  LD      $@"
+	$(Q)$(CC) -o $@ $(OBJ_SOLDERING) $(LDFLAGS)
+
 %.o:	%.c
 	@echo "  CC      $<"
 	$(Q)$(CC) $(CFLAGS) -c $< -o $@
+
+%-soldering.o: %.c
+	@echo "  CC      $<"
+	$(Q)$(CC) $(CFLAGS) -DTRACK=soldering -c $< -o $@
 
 %.bin:	%
 	@echo "  OBJCOPY $@"
