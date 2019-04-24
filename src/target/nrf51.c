@@ -172,6 +172,7 @@ bool nrf51_probe(target *t)
 	case 0x00AC: /* nRF52832 Preview QFAA BA0 */
 	case 0x00C7: /* nRF52832 Revision 1 QFAA B00 */
 	case 0x00E3: /* nRF52832-CIAA CSP */
+	case 0x0139: /* nRF52832 Revision 2 QFAA E0 */
 		t->driver = "Nordic nRF52";
 		t->target_options |= CORTEXM_TOPT_INHIBIT_SRST;
 		target_add_ram(t, 0x20000000, 64*1024);
